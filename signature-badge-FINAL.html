@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Curri Email Signature — Badge Style Generator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+    }
+    
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .header p {
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    
+    .app {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    
+    @media (max-width: 768px) {
+      .app { grid-template-columns: 1fr; }
+    }
+    
+    .panel {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+    
+    .panel-header {
+      background: #f8f9fa;
+      border-bottom: 1px solid #e9ecef;
+      padding: 16px 24px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a1a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .panel-body {
+      padding: 24px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+    
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 15px;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #0a0a0a;
+      box-shadow: 0 0 0 3px rgba(10,10,10,0.1);
+    }
+    
+    input::placeholder {
+      color: #aaa;
+    }
+    
+    .photo-upload {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .photo-preview {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .photo-preview .initials {
+      font-size: 20px;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .upload-btn {
+      flex: 1;
+    }
+    
+    .upload-btn input[type="file"] {
+      display: none;
+    }
+    
+    .upload-btn label {
+      display: block;
+      padding: 12px 16px;
+      background: #f8f9fa;
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: none;
+      font-size: 13px;
+    }
+    
+    .upload-btn label:hover {
+      border-color: #0a0a0a;
+      background: #f0f0f0;
+    }
+    
+    .preview-wrapper {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 24px;
+      min-height: 200px;
+    }
+    
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: #0a0a0a;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #333;
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: #e9ecef;
+      color: #1a1a1a;
+    }
+    
+    .btn-secondary:hover {
+      background: #dee2e6;
+    }
+    
+    .copied {
+      background: #28a745 !important;
+    }
+    
+    .instructions {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 24px;
+      color: white;
+    }
+    
+    .instructions h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      opacity: 0.9;
+    }
+    
+    .instructions ol {
+      margin-left: 20px;
+      line-height: 1.8;
+      opacity: 0.8;
+    }
+    
+    .note {
+      background: rgba(233, 69, 96, 0.2);
+      border: 1px solid rgba(233, 69, 96, 0.3);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    
+    .footer {
+      text-align: center;
+      color: white;
+      opacity: 0.5;
+      font-size: 12px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚚 Curri Email Signature</h1>
+      <p>Badge Style — with profile photo</p>
+    </div>
+    
+    <div class="app">
+      <!-- Form Panel -->
+      <div class="panel">
+        <div class="panel-header">Your Information</div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label>Profile Photo</label>
+            <div class="photo-upload">
+              <div class="photo-preview" id="photoPreview">
+                <span class="initials" id="initialsDisplay">?</span>
+              </div>
+              <div class="upload-btn">
+                <input type="file" id="photo" accept="image/*" onchange="handlePhotoUpload(event)">
+                <label for="photo">📷 Upload Photo<br><small style="opacity: 0.6;">Square crop recommended</small></label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="name" placeholder="Marcus Rodriguez" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Job Title</label>
+            <input type="text" id="title" placeholder="Director of Operations" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="marcus@curri.com" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Phone (optional)</label>
+            <input type="tel" id="phone" placeholder="(555) 987-6543" oninput="updatePreview()">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Preview Panel -->
+      <div class="panel">
+        <div class="panel-header">Live Preview</div>
+        <div class="panel-body">
+          <div class="preview-wrapper">
+            <div id="preview"></div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" onclick="copyHTML()">📋 Copy HTML</button>
+            <button class="btn btn-secondary" onclick="copyRich()">📝 Copy Rich Text</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="instructions">
+      <h3>How to Use</h3>
+      <ol>
+        <li><strong>Upload your photo</strong> — Square crop works best (will be 56×56px)</li>
+        <li><strong>Fill in your details</strong> — Watch the preview update in real-time</li>
+        <li><strong>Copy Rich Text</strong> — Best for Gmail. Paste directly into signature settings.</li>
+        <li><strong>Copy HTML</strong> — For Outlook or if rich text doesn't work.</li>
+      </ol>
+      <div class="note">
+        <strong>⚠️ Photo Hosting:</strong> The photo is embedded as base64 data. For best results, upload your photo to a permanent URL (like your company headshot) and IT can help update the signature.
+      </div>
+    </div>
+    
+    <div class="footer">
+      Curri IT · Internal Tool
+    </div>
+  </div>
+  
+  <script>
+    const LOGO_URL = 'https://curriexternal.s3.us-west-1.amazonaws.com/images/curri-logo%402x.png';
+    let photoDataUrl = null;
+    
+    function getInitials(name) {
+      if (!name) return '?';
+      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+    
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          photoDataUrl = e.target.result;
+          document.getElementById('photoPreview').innerHTML = `<img src="${photoDataUrl}" alt="Photo">`;
+          updatePreview();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    
+    function generateSignature(name, title, email, phone, photoUrl) {
+      const initials = getInitials(name);
+      
+      const photoHtml = photoUrl 
+        ? `<img src="${photoUrl}" alt="Photo" width="56" height="56" style="display: block; border: 0; border-radius: 8px; object-fit: cover;" />`
+        : `<table cellpadding="0" cellspacing="0" border="0" style="background: #0a0a0a; border-radius: 8px; width: 56px; height: 56px;">
+              <tr>
+                <td style="text-align: center; vertical-align: middle;">
+                  <span style="font-size: 20px; font-weight: 700; color: white;">${initials}</span>
+                </td>
+              </tr>
+            </table>`;
+      
+      const phoneHtml = phone 
+        ? `<td><a href="tel:${phone.replace(/\D/g, '')}" style="color: #555; text-decoration: none;">${phone}</a></td>`
+        : '';
+      
+      const phoneSeparator = phone ? '<td style="padding-right: 12px;">' : '<td>';
+      
+      return `<table cellpadding="0" cellspacing="0" border="0" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: #1a1a1a; max-width: 400px;">
+  <tr>
+    <td>
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td style="vertical-align: top; padding-right: 16px;">
+            ${photoHtml}
+          </td>
+          <td style="vertical-align: top;">
+            <div style="font-size: 17px; font-weight: 600; color: #0a0a0a; margin-bottom: 1px;">${name || 'Your Name'}</div>
+            <div style="font-size: 12px; color: #666; margin-bottom: 10px;">${title || 'Your Title'}</div>
+            <table cellpadding="0" cellspacing="0" border="0" style="font-size: 12px; color: #555;">
+              <tr>
+                ${phoneSeparator}<a href="mailto:${email || 'you@curri.com'}" style="color: #555; text-decoration: none;">${email || 'you@curri.com'}</a></td>
+                ${phoneHtml}
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-top: 14px;">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td style="padding-right: 12px;">
+            <img src="${LOGO_URL}" alt="Curri" height="20" style="display: block; border: 0;" />
+          </td>
+          <td style="font-size: 11px; color: #999;">
+            <a href="https://curri.com" style="color: #777; text-decoration: none;">curri.com</a> · Nationwide delivery
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>`;
+    }
+    
+    function updatePreview() {
+      const name = document.getElementById('name').value;
+      const title = document.getElementById('title').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      
+      // Update initials display if no photo
+      if (!photoDataUrl) {
+        document.getElementById('initialsDisplay').textContent = getInitials(name);
+      }
+      
+      document.getElementById('preview').innerHTML = generateSignature(name, title, email, phone, photoDataUrl);
+    }
+    
+    function copyHTML() {
+      const name = document.getElementById('name').value;
+      const title = document.getElementById('title').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      
+      const html = generateSignature(name, title, email, phone, photoDataUrl);
+      navigator.clipboard.writeText(html).then(() => {
+        const btn = event.target;
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '📋 Copy HTML';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+    
+    function copyRich() {
+      const preview = document.getElementById('preview');
+      const range = document.createRange();
+      range.selectNode(preview);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      window.getSelection().removeAllRanges();
+      
+      const btn = event.target;
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📝 Copy Rich Text';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+    
+    // Initialize preview
+    updatePreview();
+  </script>
+</body>
+</html>
