@@ -405,14 +405,14 @@
       // - Minified HTML (no whitespace)
       // - Simplified structure
       // - Shorter style declarations
-      // - No decorative divider
+      // - Includes decorative divider
       // - No tagline
       const n = name || 'Your Name';
       const t = title || 'Your Title';
       const e = email || 'you@curri.com';
       const p = phone ? `<br><a href="tel:${phone.replace(/\D/g, '')}" style="color:#444;text-decoration:none">${phone}</a>` : '';
       
-      return `<table cellpadding="0" cellspacing="0" style="font-family:Arial,sans-serif;font-size:14px;color:#1a1a1a"><tr><td style="padding-bottom:12px"><img src="${LOGO_URL}" alt="Curri" height="17" style="display:block"></td></tr><tr><td style="padding-bottom:10px"><b style="font-size:16px;color:#0a0a0a">${n}</b><br><span style="font-size:13px;color:#666">${t}</span></td></tr><tr><td style="font-size:13px;color:#444"><a href="mailto:${e}" style="color:#444;text-decoration:none">${e}</a>${p}<br><a href="https://curri.com" style="color:#444;text-decoration:none">curri.com</a></td></tr></table>`;
+      return `<table cellpadding="0" cellspacing="0" style="font-family:Arial,sans-serif;font-size:14px;color:#1a1a1a"><tr><td style="padding-bottom:12px"><img src="${LOGO_URL}" alt="Curri" height="17" style="display:block"></td></tr><tr><td style="padding-bottom:10px"><b style="font-size:16px;color:#0a0a0a">${n}</b><br><span style="font-size:13px;color:#666">${t}</span></td></tr><tr><td style="padding-bottom:12px"><table cellpadding="0" cellspacing="0"><tr><td style="width:48px;height:2px;background:#1a1a1a"></td><td style="width:8px"></td><td style="width:6px;height:2px;background:#1a1a1a"></td><td style="width:8px"></td><td style="width:120px;height:2px;background:#1a1a1a"></td></tr></table></td></tr><tr><td style="font-size:13px;color:#444"><a href="mailto:${e}" style="color:#444;text-decoration:none">${e}</a>${p}<br><a href="https://curri.com" style="color:#444;text-decoration:none">curri.com</a></td></tr></table>`;
     }
 
     function updatePreview() {
