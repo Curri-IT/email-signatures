@@ -41,6 +41,42 @@
       opacity: 0.8;
     }
 
+    .template-selector {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .template-btn {
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .template-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .template-btn.active {
+      background: white;
+      color: #1a1a2e;
+      border-color: white;
+    }
+
+    .template-note {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
     .app {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -158,6 +194,21 @@
       background: #28a745 !important;
     }
 
+    .char-count {
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      margin-top: 12px;
+    }
+
+    .char-count.over-limit {
+      color: #dc3545;
+    }
+
+    .char-count.under-limit {
+      color: #28a745;
+    }
+
     .instructions {
       background: rgba(255, 255, 255, 0.1);
       border-radius: 12px;
@@ -197,6 +248,12 @@
       <p>Generate your official email signature in seconds</p>
     </div>
 
+    <div class="template-selector">
+      <button class="template-btn active" onclick="selectTemplate('standard')">Standard</button>
+      <button class="template-btn" onclick="selectTemplate('salesforce')">Salesforce</button>
+    </div>
+    <div class="template-note" id="templateNote">Full-featured signature for Gmail, Outlook, and most email clients</div>
+
     <div class="app">
       <!-- Form Panel -->
       <div class="panel">
@@ -232,6 +289,7 @@
             <button class="btn btn-primary" onclick="copyHTML()">📋 Copy HTML</button>
             <button class="btn btn-secondary" onclick="copyRich()">📝 Copy Rich Text</button>
           </div>
+          <div class="char-count" id="charCount"></div>
         </div>
       </div>
     </div>
@@ -252,8 +310,24 @@
 
   <script>
     const LOGO_URL = 'https://curriexternal.s3.us-west-1.amazonaws.com/images/curri-logo%402x.png';
+    let currentTemplate = 'standard';
 
-    function generateSignature(name, title, email, phone) {
+    function selectTemplate(template) {
+      currentTemplate = template;
+      document.querySelectorAll('.template-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      const note = document.getElementById('templateNote');
+      if (template === 'salesforce') {
+        note.textContent = 'Compact signature optimized for Salesforce (under 1,333 characters)';
+      } else {
+        note.textContent = 'Full-featured signature for Gmail, Outlook, and most email clients';
+      }
+      
+      updatePreview();
+    }
+
+    function generateStandardSignature(name, title, email, phone) {
       const phoneRow = phone ? `
         <tr>
           <td style="padding-bottom: 4px;">
@@ -326,13 +400,46 @@
 </table>`;
     }
 
+    function generateSalesforceSignature(name, title, email, phone) {
+      // Compact version optimized for Salesforce's 1,333 character limit
+      // - Minified HTML (no whitespace)
+      // - Simplified structure
+      // - Shorter style declarations
+      // - No decorative divider
+      // - No tagline
+      const n = name || 'Your Name';
+      const t = title || 'Your Title';
+      const e = email || 'you@curri.com';
+      const p = phone ? `<br><a href="tel:${phone.replace(/\D/g, '')}" style="color:#444;text-decoration:none">${phone}</a>` : '';
+      
+      return `<table cellpadding="0" cellspacing="0" style="font-family:Arial,sans-serif;font-size:14px;color:#1a1a1a"><tr><td style="padding-bottom:12px"><img src="${LOGO_URL}" alt="Curri" height="17" style="display:block"></td></tr><tr><td style="padding-bottom:10px"><b style="font-size:16px;color:#0a0a0a">${n}</b><br><span style="font-size:13px;color:#666">${t}</span></td></tr><tr><td style="font-size:13px;color:#444"><a href="mailto:${e}" style="color:#444;text-decoration:none">${e}</a>${p}<br><a href="https://curri.com" style="color:#444;text-decoration:none">curri.com</a></td></tr></table>`;
+    }
+
     function updatePreview() {
       const name = document.getElementById('name').value;
       const title = document.getElementById('title').value;
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
 
-      document.getElementById('preview').innerHTML = generateSignature(name, title, email, phone);
+      let html;
+      if (currentTemplate === 'salesforce') {
+        html = generateSalesforceSignature(name, title, email, phone);
+      } else {
+        html = generateStandardSignature(name, title, email, phone);
+      }
+
+      document.getElementById('preview').innerHTML = html;
+      
+      // Update character count
+      const charCount = document.getElementById('charCount');
+      const count = html.length;
+      if (currentTemplate === 'salesforce') {
+        charCount.textContent = `${count} / 1,333 characters`;
+        charCount.className = 'char-count ' + (count <= 1333 ? 'under-limit' : 'over-limit');
+      } else {
+        charCount.textContent = `${count} characters`;
+        charCount.className = 'char-count';
+      }
     }
 
     function copyHTML() {
@@ -341,7 +448,13 @@
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
 
-      const html = generateSignature(name, title, email, phone);
+      let html;
+      if (currentTemplate === 'salesforce') {
+        html = generateSalesforceSignature(name, title, email, phone);
+      } else {
+        html = generateStandardSignature(name, title, email, phone);
+      }
+      
       navigator.clipboard.writeText(html).then(() => {
         const btn = event.target;
         btn.textContent = '✓ Copied!';
