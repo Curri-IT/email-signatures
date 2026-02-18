@@ -1,58 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Curri Email Signature Generator</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
       padding: 40px 20px;
     }
-    
+
     .container {
       max-width: 900px;
       margin: 0 auto;
     }
-    
+
     .header {
       text-align: center;
       color: white;
       margin-bottom: 40px;
     }
-    
+
     .header h1 {
       font-size: 32px;
       font-weight: 700;
       margin-bottom: 8px;
     }
-    
+
     .header p {
       font-size: 16px;
       opacity: 0.8;
     }
-    
+
     .app {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
     }
-    
+
     @media (max-width: 768px) {
-      .app { grid-template-columns: 1fr; }
+      .app {
+        grid-template-columns: 1fr;
+      }
     }
-    
+
     .panel {
       background: white;
       border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
       overflow: hidden;
     }
-    
+
     .panel-header {
       background: #f8f9fa;
       border-bottom: 1px solid #e9ecef;
@@ -63,19 +70,19 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    
+
     .panel-body {
       padding: 24px;
     }
-    
+
     .form-group {
       margin-bottom: 20px;
     }
-    
+
     .form-group:last-child {
       margin-bottom: 0;
     }
-    
+
     label {
       display: block;
       font-size: 12px;
@@ -85,7 +92,7 @@
       letter-spacing: 0.5px;
       margin-bottom: 8px;
     }
-    
+
     input {
       width: 100%;
       padding: 12px 16px;
@@ -94,30 +101,29 @@
       border-radius: 8px;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    
+
     input:focus {
       outline: none;
       border-color: #0a0a0a;
-      box-shadow: 0 0 0 3px rgba(10,10,10,0.1);
+      box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.1);
     }
-    
+
     input::placeholder {
       color: #aaa;
     }
-    
+
     .preview-wrapper {
-      background: #f9f9f9;
       border-radius: 8px;
       padding: 24px;
       min-height: 280px;
     }
-    
+
     .actions {
       margin-top: 20px;
       display: flex;
       gap: 12px;
     }
-    
+
     .btn {
       flex: 1;
       padding: 14px 20px;
@@ -128,38 +134,38 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-    
+
     .btn-primary {
       background: #0a0a0a;
       color: white;
     }
-    
+
     .btn-primary:hover {
       background: #333;
       transform: translateY(-1px);
     }
-    
+
     .btn-secondary {
       background: #e9ecef;
       color: #1a1a1a;
     }
-    
+
     .btn-secondary:hover {
       background: #dee2e6;
     }
-    
+
     .copied {
       background: #28a745 !important;
     }
-    
+
     .instructions {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       padding: 24px;
       margin-top: 24px;
       color: white;
     }
-    
+
     .instructions h3 {
       font-size: 14px;
       text-transform: uppercase;
@@ -167,13 +173,13 @@
       margin-bottom: 16px;
       opacity: 0.9;
     }
-    
+
     .instructions ol {
       margin-left: 20px;
       line-height: 1.8;
       opacity: 0.8;
     }
-    
+
     .footer {
       text-align: center;
       color: white;
@@ -183,13 +189,14 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="header">
       <h1>🚚 Curri Email Signature</h1>
       <p>Generate your official email signature in seconds</p>
     </div>
-    
+
     <div class="app">
       <!-- Form Panel -->
       <div class="panel">
@@ -213,7 +220,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Preview Panel -->
       <div class="panel">
         <div class="panel-header">Live Preview</div>
@@ -228,7 +235,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="instructions">
       <h3>How to Use</h3>
       <ol>
@@ -237,15 +244,15 @@
         <li><strong>Copy HTML</strong> — For Outlook or if rich text doesn't work. Paste into HTML editor.</li>
       </ol>
     </div>
-    
+
     <div class="footer">
       Curri IT · Internal Tool
     </div>
   </div>
-  
+
   <script>
-    const LOGO_URL = 'https://curri.com/images/logo-black.png';
-    
+    const LOGO_URL = 'https://curriexternal.s3.us-west-1.amazonaws.com/images/curri-logo%402x.png';
+
     function generateSignature(name, title, email, phone) {
       const phoneRow = phone ? `
         <tr>
@@ -253,7 +260,7 @@
             <a href="tel:${phone.replace(/\D/g, '')}" style="color: #444444; text-decoration: none;">${phone}</a>
           </td>
         </tr>` : '';
-      
+
       return `<table cellpadding="0" cellspacing="0" border="0" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #1a1a1a; max-width: 400px;">
   <tr>
     <td style="padding-bottom: 16px;">
@@ -310,7 +317,7 @@
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td style="font-size: 11px; color: #999999; font-style: italic;">
-            The way the world delivers construction & industrial supplies
+            Logistics software engineered to grow your revenue
           </td>
         </tr>
       </table>
@@ -318,22 +325,22 @@
   </tr>
 </table>`;
     }
-    
+
     function updatePreview() {
       const name = document.getElementById('name').value;
       const title = document.getElementById('title').value;
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
-      
+
       document.getElementById('preview').innerHTML = generateSignature(name, title, email, phone);
     }
-    
+
     function copyHTML() {
       const name = document.getElementById('name').value;
       const title = document.getElementById('title').value;
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
-      
+
       const html = generateSignature(name, title, email, phone);
       navigator.clipboard.writeText(html).then(() => {
         const btn = event.target;
@@ -345,7 +352,7 @@
         }, 2000);
       });
     }
-    
+
     function copyRich() {
       const preview = document.getElementById('preview');
       const range = document.createRange();
@@ -354,7 +361,7 @@
       window.getSelection().addRange(range);
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
-      
+
       const btn = event.target;
       btn.textContent = '✓ Copied!';
       btn.classList.add('copied');
@@ -363,9 +370,10 @@
         btn.classList.remove('copied');
       }, 2000);
     }
-    
+
     // Initialize preview
     updatePreview();
   </script>
 </body>
+
 </html>
