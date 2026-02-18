@@ -332,15 +332,11 @@
     function generateStandardSignature(name, title, email, phone) {
       const emailRow = email ? `
         <tr>
-          <td style="padding-bottom: 4px;">
-            <a href="mailto:${email}" style="color: #444444;">${email}</a>
-          </td>
+          <td style="padding-bottom: 4px; color: #444444;">${email}</td>
         </tr>` : '';
       const phoneRow = phone ? `
         <tr>
-          <td style="padding-bottom: 4px;">
-            <a href="tel:${phone.replace(/\D/g, '')}" style="color: #444444;">${phone}</a>
-          </td>
+          <td style="padding-bottom: 4px; color: #444444;">${phone}</td>
         </tr>` : '';
 
       return `<table cellpadding="0" cellspacing="0" border="0" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #1a1a1a; max-width: 400px;">
@@ -406,8 +402,8 @@
       // - No tagline
       const n = name || 'Your Name';
       const t = title || 'Your Title';
-      const eml = email ? `<a href="mailto:${email}" style="color:#444">${email}</a><br>` : '';
-      const p = phone ? `<a href="tel:${phone.replace(/\D/g, '')}" style="color:#444">${phone}</a>` : '';
+      const eml = email ? `${email}<br>` : '';
+      const p = phone ? `${phone}` : '';
 
       return `<table cellpadding="0" cellspacing="0" style="font-family:Arial,sans-serif;font-size:14px;color:#1a1a1a"><tr><td style="padding-bottom:12px"><a href="https://curri.com"><img src="${LOGO_URL}" alt="Curri" height="16" style="display:block;border:0"></a></td></tr><tr><td style="padding-bottom:10px"><b style="font-size:16px;color:#0a0a0a">${n}</b><br><span style="font-size:13px;color:#666">${t}</span></td></tr><tr><td style="padding-bottom:12px"><table cellpadding="0" cellspacing="0"><tr><td style="width:48px;height:2px;background:#1a1a1a"></td><td style="width:8px"></td><td style="width:6px;height:2px;background:#1a1a1a"></td><td style="width:8px"></td><td style="width:120px;height:2px;background:#1a1a1a"></td></tr></table></td></tr><tr><td style="font-size:13px;color:#444">${eml}${p}</td></tr></table>`;
     }
