@@ -22,7 +22,7 @@
     .header {
       text-align: center;
       color: white;
-      margin-bottom: 32px;
+      margin-bottom: 40px;
     }
     
     .header h1 {
@@ -36,37 +36,6 @@
       opacity: 0.8;
     }
     
-    /* Style Selector */
-    .style-selector {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 32px;
-    }
-    
-    .style-btn {
-      padding: 14px 28px;
-      font-size: 14px;
-      font-weight: 600;
-      border: 2px solid rgba(255,255,255,0.2);
-      border-radius: 8px;
-      background: rgba(255,255,255,0.1);
-      color: white;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .style-btn:hover {
-      background: rgba(255,255,255,0.15);
-      border-color: rgba(255,255,255,0.3);
-    }
-    
-    .style-btn.active {
-      background: white;
-      color: #1a1a1a;
-      border-color: white;
-    }
-    
     .app {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -75,7 +44,6 @@
     
     @media (max-width: 768px) {
       .app { grid-template-columns: 1fr; }
-      .style-selector { flex-direction: column; align-items: center; }
     }
     
     .panel {
@@ -108,10 +76,6 @@
       margin-bottom: 0;
     }
     
-    .form-group.hidden {
-      display: none;
-    }
-    
     label {
       display: block;
       font-size: 12px;
@@ -122,9 +86,7 @@
       margin-bottom: 8px;
     }
     
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"] {
+    input {
       width: 100%;
       padding: 12px 16px;
       font-size: 15px;
@@ -141,62 +103,6 @@
     
     input::placeholder {
       color: #aaa;
-    }
-    
-    .photo-upload {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    
-    .photo-preview {
-      width: 64px;
-      height: 64px;
-      border-radius: 8px;
-      background: #0a0a0a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-    
-    .photo-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .photo-preview .initials {
-      font-size: 20px;
-      font-weight: 700;
-      color: white;
-    }
-    
-    .upload-btn {
-      flex: 1;
-    }
-    
-    .upload-btn input[type="file"] {
-      display: none;
-    }
-    
-    .upload-btn label {
-      display: block;
-      padding: 12px 16px;
-      background: #f8f9fa;
-      border: 2px dashed #ddd;
-      border-radius: 8px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-transform: none;
-      font-size: 13px;
-    }
-    
-    .upload-btn label:hover {
-      border-color: #0a0a0a;
-      background: #f0f0f0;
     }
     
     .preview-wrapper {
@@ -284,29 +190,11 @@
       <p>Generate your official email signature in seconds</p>
     </div>
     
-    <!-- Style Selector -->
-    <div class="style-selector">
-      <button class="style-btn active" onclick="setStyle('minimal')" id="btn-minimal">Minimal Motion</button>
-      <button class="style-btn" onclick="setStyle('badge')" id="btn-badge">Badge Style + Photo</button>
-    </div>
-    
     <div class="app">
       <!-- Form Panel -->
       <div class="panel">
         <div class="panel-header">Your Information</div>
         <div class="panel-body">
-          <div class="form-group hidden" id="photo-group">
-            <label>Profile Photo</label>
-            <div class="photo-upload">
-              <div class="photo-preview" id="photoPreview">
-                <span class="initials" id="initialsDisplay">?</span>
-              </div>
-              <div class="upload-btn">
-                <input type="file" id="photo" accept="image/*" onchange="handlePhotoUpload(event)">
-                <label for="photo">📷 Upload Photo<br><small style="opacity: 0.6;">Square crop recommended</small></label>
-              </div>
-            </div>
-          </div>
           <div class="form-group">
             <label>Full Name</label>
             <input type="text" id="name" placeholder="Sarah Chen" oninput="updatePreview()">
@@ -344,10 +232,9 @@
     <div class="instructions">
       <h3>How to Use</h3>
       <ol>
-        <li><strong>Choose your style</strong> — Minimal Motion (clean) or Badge Style (with photo)</li>
         <li><strong>Fill in your details</strong> — Watch the preview update in real-time</li>
         <li><strong>Copy Rich Text</strong> — Best for Gmail. Paste directly into signature settings.</li>
-        <li><strong>Copy HTML</strong> — For Outlook or if rich text doesn't work.</li>
+        <li><strong>Copy HTML</strong> — For Outlook or if rich text doesn't work. Paste into HTML editor.</li>
       </ol>
     </div>
     
@@ -357,42 +244,9 @@
   </div>
   
   <script>
-    const LOGO_URL = 'https://curriexternal.s3.us-west-1.amazonaws.com/images/curri-logo%402x.png';
-    let currentStyle = 'minimal';
-    let photoDataUrl = null;
+    const LOGO_URL = 'https://curri.com/images/logo-black.png';
     
-    function setStyle(style) {
-      currentStyle = style;
-      
-      // Update buttons
-      document.getElementById('btn-minimal').classList.toggle('active', style === 'minimal');
-      document.getElementById('btn-badge').classList.toggle('active', style === 'badge');
-      
-      // Show/hide photo upload
-      document.getElementById('photo-group').classList.toggle('hidden', style === 'minimal');
-      
-      updatePreview();
-    }
-    
-    function getInitials(name) {
-      if (!name) return '?';
-      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-    }
-    
-    function handlePhotoUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          photoDataUrl = e.target.result;
-          document.getElementById('photoPreview').innerHTML = `<img src="${photoDataUrl}" alt="Photo">`;
-          updatePreview();
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-    
-    function generateMinimalSignature(name, title, email, phone) {
+    function generateSignature(name, title, email, phone) {
       const phoneRow = phone ? `
         <tr>
           <td style="padding-bottom: 4px;">
@@ -403,7 +257,7 @@
       return `<table cellpadding="0" cellspacing="0" border="0" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #1a1a1a; max-width: 400px;">
   <tr>
     <td style="padding-bottom: 16px;">
-      <img src="${LOGO_URL}" alt="Curri" height="14" style="display: block; border: 0;" />
+      <img src="${LOGO_URL}" alt="Curri" height="27" style="display: block; border: 0;" />
     </td>
   </tr>
   <tr>
@@ -456,65 +310,7 @@
       <table cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td style="font-size: 11px; color: #999999; font-style: italic;">
-            Logistics software engineered to grow your revenue
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>`;
-    }
-    
-    function generateBadgeSignature(name, title, email, phone, photoUrl) {
-      const initials = getInitials(name);
-      
-      const photoHtml = photoUrl 
-        ? `<img src="${photoUrl}" alt="Photo" width="56" height="56" style="display: block; border: 0; border-radius: 8px; object-fit: cover;" />`
-        : `<table cellpadding="0" cellspacing="0" border="0" style="background: #0a0a0a; border-radius: 8px; width: 56px; height: 56px;">
-              <tr>
-                <td style="text-align: center; vertical-align: middle;">
-                  <span style="font-size: 20px; font-weight: 700; color: white;">${initials}</span>
-                </td>
-              </tr>
-            </table>`;
-      
-      const phoneHtml = phone 
-        ? `<td><a href="tel:${phone.replace(/\D/g, '')}" style="color: #555; text-decoration: none;">${phone}</a></td>`
-        : '';
-      
-      const phoneSeparator = phone ? '<td style="padding-right: 12px;">' : '<td>';
-      
-      return `<table cellpadding="0" cellspacing="0" border="0" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 14px; color: #1a1a1a; max-width: 400px;">
-  <tr>
-    <td>
-      <table cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td style="vertical-align: top; padding-right: 16px;">
-            ${photoHtml}
-          </td>
-          <td style="vertical-align: top;">
-            <div style="font-size: 17px; font-weight: 600; color: #0a0a0a; margin-bottom: 1px;">${name || 'Your Name'}</div>
-            <div style="font-size: 12px; color: #666; margin-bottom: 10px;">${title || 'Your Title'}</div>
-            <table cellpadding="0" cellspacing="0" border="0" style="font-size: 12px; color: #555;">
-              <tr>
-                ${phoneSeparator}<a href="mailto:${email || 'you@curri.com'}" style="color: #555; text-decoration: none;">${email || 'you@curri.com'}</a></td>
-                ${phoneHtml}
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td style="padding-top: 14px;">
-      <table cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td style="padding-right: 12px;">
-            <img src="${LOGO_URL}" alt="Curri" height="20" style="display: block; border: 0;" />
-          </td>
-          <td style="font-size: 11px; color: #999;">
-            <a href="https://curri.com" style="color: #777; text-decoration: none;">curri.com</a> · Nationwide delivery
+            The way the world delivers construction & industrial supplies
           </td>
         </tr>
       </table>
@@ -529,16 +325,7 @@
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
       
-      // Update initials display if badge style and no photo
-      if (currentStyle === 'badge' && !photoDataUrl) {
-        document.getElementById('initialsDisplay').textContent = getInitials(name);
-      }
-      
-      const html = currentStyle === 'minimal' 
-        ? generateMinimalSignature(name, title, email, phone)
-        : generateBadgeSignature(name, title, email, phone, photoDataUrl);
-      
-      document.getElementById('preview').innerHTML = html;
+      document.getElementById('preview').innerHTML = generateSignature(name, title, email, phone);
     }
     
     function copyHTML() {
@@ -547,10 +334,7 @@
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
       
-      const html = currentStyle === 'minimal' 
-        ? generateMinimalSignature(name, title, email, phone)
-        : generateBadgeSignature(name, title, email, phone, photoDataUrl);
-      
+      const html = generateSignature(name, title, email, phone);
       navigator.clipboard.writeText(html).then(() => {
         const btn = event.target;
         btn.textContent = '✓ Copied!';
