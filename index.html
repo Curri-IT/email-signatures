@@ -270,10 +270,6 @@
             <input type="text" id="title" placeholder="Senior Account Manager" oninput="updatePreview()">
           </div>
           <div class="form-group">
-            <label>Email (optional)</label>
-            <input type="email" id="email" placeholder="sarah.chen@curri.com" oninput="updatePreview()">
-          </div>
-          <div class="form-group">
             <label>Phone (optional)</label>
             <input type="tel" id="phone" placeholder="(555) 123-4567" oninput="updatePreview()">
           </div>
@@ -329,11 +325,7 @@
       updatePreview();
     }
 
-    function generateStandardSignature(name, title, email, phone) {
-      const emailRow = email ? `
-        <tr>
-          <td style="padding-bottom: 4px;"><a href="mailto:${email}" style="color: #444444; text-decoration: none;">${email}</a></td>
-        </tr>` : '';
+    function generateStandardSignature(name, title, phone) {
       const phoneRow = phone ? `
         <tr>
           <td style="padding-bottom: 4px; color: #444444;">${phone}</td>
@@ -376,7 +368,7 @@
   </tr>
   <tr>
     <td>
-      <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #444444;">${emailRow}${phoneRow}
+      <table cellpadding="0" cellspacing="0" border="0" style="font-size: 13px; color: #444444;">${phoneRow}
       </table>
     </td>
   </tr>
@@ -394,7 +386,7 @@
 </table>`;
     }
 
-    function generateSalesforceSignature(name, title, email, phone) {
+    function generateSalesforceSignature(name, title, phone) {
       // Compact version optimized for Salesforce's 1,333 character limit
       // - Minified HTML (no whitespace)
       // - Simplified structure
@@ -403,23 +395,21 @@
       // - No tagline
       const n = name || 'Your Name';
       const t = title || 'Your Title';
-      const eml = email ? `<a href="mailto:${email}" style="color:#444;text-decoration:none">${email}</a><br>` : '';
       const p = phone ? `${phone}<br>` : '';
 
-      return `<table cellpadding="0" cellspacing="0" style="font-family:Arial,sans-serif;font-size:14px;color:#1a1a1a"><tr><td style="padding-bottom:12px"><a href="https://curri.com"><img src="${LOGO_URL}" alt="Curri" height="16" style="display:block;border:0"></a></td></tr><tr><td style="padding-bottom:10px"><b style="font-size:16px;color:#0a0a0a">${n}</b><br><span style="font-size:13px;color:#666">${t}</span></td></tr><tr><td style="padding-bottom:12px"><table cellpadding="0" cellspacing="0"><tr><td style="width:48px;height:2px;background:#1a1a1a;line-height:1px;font-size:1px">&nbsp;</td><td style="width:8px;line-height:1px;font-size:1px">&nbsp;</td><td style="width:6px;height:2px;background:#1a1a1a;line-height:1px;font-size:1px">&nbsp;</td><td style="width:8px;line-height:1px;font-size:1px">&nbsp;</td><td style="width:120px;height:2px;background:#1a1a1a;line-height:1px;font-size:1px">&nbsp;</td></tr></table></td></tr><tr><td style="font-size:13px;color:#444">${eml}${p}<a href="https://curri.com" style="color:#444;text-decoration:none"><span style="color:#444;text-decoration:none">curri.com</span></a></td></tr></table>`;
+      return `<table cellpadding="0" cellspacing="0" style="font-family:Arial,sans-serif;font-size:14px;color:#1a1a1a"><tr><td style="padding-bottom:12px"><a href="https://curri.com"><img src="${LOGO_URL}" alt="Curri" height="16" style="display:block;border:0"></a></td></tr><tr><td style="padding-bottom:10px"><b style="font-size:16px;color:#0a0a0a">${n}</b><br><span style="font-size:13px;color:#666">${t}</span></td></tr><tr><td style="padding-bottom:12px"><table cellpadding="0" cellspacing="0"><tr><td style="width:48px;height:2px;background:#1a1a1a;line-height:1px;font-size:1px">&nbsp;</td><td style="width:8px;line-height:1px;font-size:1px">&nbsp;</td><td style="width:6px;height:2px;background:#1a1a1a;line-height:1px;font-size:1px">&nbsp;</td><td style="width:8px;line-height:1px;font-size:1px">&nbsp;</td><td style="width:120px;height:2px;background:#1a1a1a;line-height:1px;font-size:1px">&nbsp;</td></tr></table></td></tr><tr><td style="font-size:13px;color:#444">${p}<a href="https://curri.com" style="color:#444;text-decoration:none"><span style="color:#444;text-decoration:none">curri.com</span></a></td></tr></table>`;
     }
 
     function updatePreview() {
       const name = document.getElementById('name').value;
       const title = document.getElementById('title').value;
-      const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
 
       let html;
       if (currentTemplate === 'salesforce') {
-        html = generateSalesforceSignature(name, title, email, phone);
+        html = generateSalesforceSignature(name, title, phone);
       } else {
-        html = generateStandardSignature(name, title, email, phone);
+        html = generateStandardSignature(name, title, phone);
       }
 
       document.getElementById('preview').innerHTML = html;
@@ -439,14 +429,13 @@
     function copyHTML() {
       const name = document.getElementById('name').value;
       const title = document.getElementById('title').value;
-      const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
 
       let html;
       if (currentTemplate === 'salesforce') {
-        html = generateSalesforceSignature(name, title, email, phone);
+        html = generateSalesforceSignature(name, title, phone);
       } else {
-        html = generateStandardSignature(name, title, email, phone);
+        html = generateStandardSignature(name, title, phone);
       }
 
       navigator.clipboard.writeText(html).then(() => {
